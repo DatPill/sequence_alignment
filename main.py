@@ -46,7 +46,7 @@ def main():
                 print(alignment)
                 print('=== END ===========================================================================\n')
 
-            with open(f'{output_filepath}/{output_filename}.txt', 'x') as file:
+            with open(f'{output_filepath}/{output_filename}.txt', 'a') as file:
                 file.write(f'=== START ========================================================================\n')
                 file.write(f"Score = {alignment.score}:\n")
                 file.write(f'{alignment}\n')
