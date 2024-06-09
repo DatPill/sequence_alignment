@@ -18,7 +18,7 @@ def main():
     # second_sequence: Seq = second_gene.parse()
     # print(second_sequence)
 
-    input_filename: str = input('Укажите путь к FASTA файлу (с названием): ').rstrip(".txt.fasta")
+    input_filename: str = input('Укажите путь к файлу (с названием): ')
     format: str = input('Укажите формат файла: ').lower().lstrip('.')
 
     output_filepath: str = input('Укажите папку, в которую необходимо сохранить файл с '
