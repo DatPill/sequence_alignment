@@ -18,13 +18,12 @@ def main():
     # second_sequence: Seq = second_gene.parse()
     # print(second_sequence)
 
-    input_filename: str = input('Укажите путь к файлу (с названием): ')
+    input_filename: str = input('Укажите путь к файлу (с названием): ').strip('"')
     format: str = input('Укажите формат файла: ').lower().lstrip('.')
 
     output_filepath: str = input('Укажите папку, в которую необходимо сохранить файл с '
                                  'выравненными последовательностями: ').strip('"')
-    output_filename: str = (input('Укажите имя файла с выравненными последовательностями: ')
-                            .strip(".txt.fasta"))
+    output_filename: str = (input('Укажите имя файла с выравненными последовательностями: '))
 
 
     aligner: PairwiseAligner = PairwiseAligner(mode='global', match_score=1, mismatch_score=-1)
@@ -47,7 +46,7 @@ def main():
                 print(alignment)
                 print('=== END ===========================================================================\n')
 
-            with open(f'{output_filepath}/{output_filename}.txt', 'a') as file:
+            with open(f'{output_filepath}/{output_filename}.txt', 'x') as file:
                 file.write(f'=== START ========================================================================\n')
                 file.write(f"Score = {alignment.score}:\n")
                 file.write(f'{alignment}\n')
