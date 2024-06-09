@@ -1,4 +1,8 @@
+import asyncio
+
+
 from Bio import Entrez, SeqIO
+from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature
 
@@ -18,6 +22,26 @@ class BasicParser:
         self.gene = gene
         self.entries = entries
 
+    @property
+    def ncbi_id(self):
+        return self._ncbi_id.lstrip('txid')
+    @ncbi_id.setter
+    def ncbi_id(self, value):
+        if self.ncbi_id_valid(value):
+            self._ncbi_id = f'txid{value}'
+        else:
+            raise ValueError("NCBI ID must be a positive integer.")
+
+    @property
+    def organism(self):
+        return self._organism.strip('"')
+    @organism.setter
+    def organism(self, value):
+        if self.organism_valid(value):
+            self._organism = value.strip()
+        else:
+            raise ValueError("Incorrect organism name.")
+
     @staticmethod
     def organism_valid(organism_name: str) -> bool:
         if isinstance(organism_name, str) and ' ' in organism_name:
@@ -30,29 +54,7 @@ class BasicParser:
             return True
         return False
 
-    @property
-    def ncbi_id(self):
-        return self._ncbi_id.lstrip('txid')
-
-    @ncbi_id.setter
-    def ncbi_id(self, value):
-        if self.ncbi_id_valid(value):
-            self._ncbi_id = f'txid{value}'
-        else:
-            raise ValueError("NCBI ID must be a positive integer.")
-
-    @property
-    def organism(self):
-        return self._organism.strip('"')
-
-    @organism.setter
-    def organism(self, value):
-        if self.organism_valid(value):
-            self._organism = value.strip()
-        else:
-            raise ValueError("Incorrect organism name.")
-
-    def parse(self) -> str | None:
+    def parse(self) -> Seq | None:
         Entrez.email = 'Test@example.com'
         organism = self._ncbi_id if self._ncbi_id is not None else self._organism   # TODO: if bot are None
 
@@ -80,6 +82,7 @@ class BasicParser:
                         if self.gene in gene.qualifiers['gene'][0]:  # TODO
                             start = gene.location.start
                             end = gene.location.end
+                            # gene_sequence = Seq(genome.seq[start:end])
                             gene_sequence += f'>{self.gene}GI:{id}|{genome.description}\n{genome.seq[start:end]}\n'
                             break
 
